@@ -24,4 +24,10 @@ class FooController extends Controller
     		'user' => $user
     	]);
     }
+    public function foo4(){
+        return view('foo.foo4',[
+            'title' => 'Foo4',
+            'body' => 'Hello world!'
+        ]);
+    }
 }
