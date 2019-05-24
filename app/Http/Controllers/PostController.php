@@ -16,7 +16,7 @@ class PostController extends Controller
         // $posts = Post::orderByDesc('created_at')->get();
 
         // 3.latestメソッドがおすすめ
-        $posts = Post::latest()->get();
+        $posts = Post::latest()->paginate(5);
         \Debugbar::info($posts);
 
         return view('posts.index', ['posts' => $posts]);
