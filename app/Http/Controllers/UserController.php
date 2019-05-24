@@ -10,7 +10,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(5);
         return view('users.index',['users' => $users]);
     }
 
@@ -34,12 +34,15 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        // そのユーサが投稿した記事のうち、最新5件を取得する
+        $user->posts = $user->posts()->paginate(5);
         return view('users.show', ['user' => $user]);
     }
 
     //更新用フォームへ移動
     public function edit(User $user)
     {
+        $this->authorize('edit', $user);
         return view('users.edit', ['user' => $user]);
     }
 
@@ -47,6 +50,7 @@ class UserController extends Controller
     // 終わったら、そのユーザのページへ移動
     public function update(Request $request, User $user)
     {
+        $this->authorize('edit', $user);
         $user->name = $request->name;
         $user->save();
         return redirect('users/'.$user->id);
@@ -54,7 +58,17 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorize('edit', $user);
         $user->delete();
         return redirect('users');
+    }
+
+    // 各アクションの前に実行されるミドルウェア
+    public function __construct()
+    {
+        // $this->middleware('auth')->except(['index', 'show']);
+        // 登録完了していなくても、退会だけはできるようにする
+        $this->middleware('auth')->only('destroy');
+        $this->middleware('verified')->except(['index', 'show', 'destroy']);
     }
 }

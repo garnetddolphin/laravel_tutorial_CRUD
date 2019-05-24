@@ -28,11 +28,21 @@
                     {{-- Navbarの左側 --}}
                     <ul class="navbar-nav mr-auto">
                         {{-- 「記事」と「ユーザー」へのリンク --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('posts') }}">{{ __('Posts') }}</a>
+                        <li class="nav-item @if (my_is_current_controller('posts')) active @endif">
+                            <a class="nav-link" href="{{ url('posts') }}">
+                                {{ __('Posts') }}
+                                @if (my_is_current_controller('posts'))
+                                    <span class="sr-only">(current)</span>
+                                @endif
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('users') }}">{{ __('Users') }}</a>
+                        <li class="nav-item @if (my_is_current_controller('users')) active @endif">
+                            <a class="nav-link" href="{{ url('users') }}">
+                                {{ __('Users') }}
+                                @if (my_is_current_controller('users'))
+                                    <span class="sr-only">(current)</span>
+                                @endif
+                            </a>
                         </li>
                     </ul>
 
@@ -48,11 +58,21 @@
                         {{-- 認証関連のリンク --}}
                         @guest
                             {{-- 「ログイン」と「ユーザー登録」へのリンク --}}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <li class="nav-item @if (my_is_current_controller('login', 'password')) active @endif">
+                                <a class="nav-link" href="{{ route('login') }}">
+                                    {{ __('Login') }}
+                                    @if (my_is_current_controller('login', 'password'))
+                                        <span class="sr-only">(current)</span>
+                                    @endif
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <li class="nav-item @if (my_is_current_controller('register')) active @endif">
+                                <a class="nav-link" href="{{ route('register') }}">
+                                    {{ __('Register') }}
+                                    @if (my_is_current_controller('register'))
+                                        <span class="sr-only">(current)</span>
+                                    @endif
+                                </a>
                             </li>
                         @else
                             {{-- 「プロフィール」と「ログアウト」のドロップダウンメニュー --}}
@@ -75,6 +95,23 @@
                                 </div>
                             </li>
                         @endguest
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="dropdown-lang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ __('locale.'.App::getLocale()) }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-lang">
+                                 @if (!App::isLocale('en'))
+                                     <a class="dropdown-item" href="{{ my_locale_url('en') }}">
+                                         {{ __('locale.en') }}
+                                     </a>
+                                 @endif
+                                 @if (!App::isLocale('ja'))
+                                     <a class="dropdown-item" href="{{ my_locale_url('ja') }}">
+                                         {{ __('locale.ja') }}
+                                     </a>
+                                 @endif
+                             </div>
+                         </li>
                     </ul>
                 </div>
             </div>

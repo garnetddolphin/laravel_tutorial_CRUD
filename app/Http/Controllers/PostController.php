@@ -16,7 +16,8 @@ class PostController extends Controller
         // $posts = Post::orderByDesc('created_at')->get();
 
         // 3.latestメソッドがおすすめ
-        $posts = Post::latest()->get();
+        $posts = Post::latest()->paginate(5);
+        \Debugbar::info($posts);
 
         return view('posts.index', ['posts' => $posts]);
     }
@@ -31,6 +32,7 @@ class PostController extends Controller
         $post = new Post;
         $post->title = $request->title;
         $post->body = $request->body;
+        $post->user_id = $request->user()->id;
         $post->save();
         return redirect('posts/'.$post->id);
     }
@@ -42,11 +44,13 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        $this->authorize('edit', $post);
         return view('posts.edit',['post' => $post]);
     }
 
     public function update(Request $request, Post $post)
     {
+        $this->authorize('edit', $post);
         $post->title = $request->title;
         $post->body = $request->body;
         $post->save();
@@ -55,7 +59,15 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('edit', $post);
         $post->delete();
         return redirect('posts');
+    }
+
+    // 各アクションの前に実行されるミドルウェア
+    public function __construct()
+    {
+        // $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('verified')->except(['index', 'show']);
     }
 }
