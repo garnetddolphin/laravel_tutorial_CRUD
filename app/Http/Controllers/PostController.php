@@ -32,6 +32,7 @@ class PostController extends Controller
         $post = new Post;
         $post->title = $request->title;
         $post->body = $request->body;
+        $post->user_id = $request->user()->id;
         $post->save();
         return redirect('posts/'.$post->id);
     }
@@ -58,5 +59,11 @@ class PostController extends Controller
     {
         $post->delete();
         return redirect('posts');
+    }
+
+    // 各アクションの前に実行されるミドルウェア
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
     }
 }
