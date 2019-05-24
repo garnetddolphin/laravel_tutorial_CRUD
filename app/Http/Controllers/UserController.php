@@ -42,6 +42,7 @@ class UserController extends Controller
     //更新用フォームへ移動
     public function edit(User $user)
     {
+        $this->authorize('edit', $user);
         return view('users.edit', ['user' => $user]);
     }
 
@@ -49,6 +50,7 @@ class UserController extends Controller
     // 終わったら、そのユーザのページへ移動
     public function update(Request $request, User $user)
     {
+        $this->authorize('edit', $user);
         $user->name = $request->name;
         $user->save();
         return redirect('users/'.$user->id);
@@ -56,6 +58,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorize('edit', $user);
         $user->delete();
         return redirect('users');
     }
