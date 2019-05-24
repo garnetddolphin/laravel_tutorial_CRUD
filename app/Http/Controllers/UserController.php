@@ -63,6 +63,9 @@ class UserController extends Controller
     // 各アクションの前に実行されるミドルウェア
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        // $this->middleware('auth')->except(['index', 'show']);
+        // 登録完了していなくても、退会だけはできるようにする
+        $this->middleware('auth')->only('destroy');
+        $this->middleware('verified')->except(['index', 'show', 'destroy']);
     }
 }

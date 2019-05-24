@@ -64,6 +64,7 @@ class PostController extends Controller
     // 各アクションの前に実行されるミドルウェア
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        // $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('verified')->except(['index', 'show']);
     }
 }
