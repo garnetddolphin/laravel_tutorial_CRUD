@@ -12,10 +12,10 @@
             {{ __('Edit') }}
         </a>
         @component('components.btn-del')
-            @slot('table', 'posts')
+            @slot('controller', 'posts')
             @slot('id', $post->id)
-        @endcomponent
-    </div>
+            @slot('name', $post->title)
+        @endcomponent    </div>
 
     {{-- 記事内容 --}}
     <dl class="row">
